@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "ai-devs-2"
+version = "0.1.0"
+description = "Project for ai-devs-2 course"
+authors = ["Michal Wodynski <mi-com-biuro@proton.me>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+requests = "2.31.0"
+
+[tool.poetry.group.dev.dependencies]
+ptipython = "1.0.1"
+python-dotenv = "1.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
