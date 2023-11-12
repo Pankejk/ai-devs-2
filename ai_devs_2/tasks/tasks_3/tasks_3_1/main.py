@@ -5,12 +5,7 @@ from tenacity import retry, wait_random_exponential, stop_after_attempt
 from tasks.settings import BASE_URL, API_KEY, OPEN_AI_API_KEY
 
 
-@retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
-def get_data(url):
-    return requests.get(url)
-
-
-def answer_question(data, question):
+def answer_question(data):
     api_url = "https://api.openai.com/v1/chat/completions"
 
     # Request headers
@@ -20,13 +15,16 @@ def answer_question(data, question):
     }
 
     payload = {
-        "model": "gpt-3.5-turbo",
+        "model": "gpt-4",
         "messages": [
-            {"role": "user", "content": question},
+            {
+                "role": "user",
+                "content": f"I am looking for a person. This all I know about this person: {data}",
+            },
             {
                 "role": "system",
-                "content": f"Here is data: {data}. Please answer or user question based on it. "
-                f"If there is no answer for question simply return I don't know."
+                "content": f"Based on provided information by user please answer who use is describing. "
+                f"Important: If you don't know who is this person simply answer: I don't know"
                 f"Important: please answer in Polish language"
                 f"Important: answer directly to question."
                 f"Important: Answer should be short.",
@@ -50,19 +48,28 @@ def answer_question(data, question):
 
 
 def main(task_name):
-    response = requests.post(
-        f"{BASE_URL}/token/{task_name}", json={"apikey": API_KEY}
-    ).json()
-    try:
-        token = response["token"]
-    except Exception:
-        print(response)
-        raise
+    is_answered = False
+    hints = []
+    while not is_answered:
+        response = requests.post(
+            f"{BASE_URL}/token/{task_name}", json={"apikey": API_KEY}
+        ).json()
+        try:
+            token = response["token"]
+        except Exception:
+            print(response)
+            raise
+        response = requests.get(f"{BASE_URL}/task/{token}").json()
 
-    response = requests.get(f"{BASE_URL}/task/{token}").json()
+        if not is_answered:
+            hints.append(response["hint"])
 
-    data = get_data(response["input"])
-    answer = answer_question(data, response["question"])
+        answer = answer_question(hints)
+
+        print("Answer:", answer)
+        print("Hints:", hints)
+        if answer != "Nie wiem.":
+            is_answered = True
 
     response = requests.post(
         f"{BASE_URL}/answer/{token}", json={"answer": answer}
@@ -72,4 +79,4 @@ def main(task_name):
 
 
 if __name__ == "__main__":
-    main("scraper")
+    main("whoami")
