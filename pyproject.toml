@@ -8,6 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 requests = "2.31.0"
+openai = "^1.2.3"
 
 [tool.poetry.group.dev.dependencies]
 ptipython = "1.0.1"
