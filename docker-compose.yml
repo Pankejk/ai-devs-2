@@ -1,0 +1,25 @@
+version: '3'
+services:
+#  postgres:
+#    image: postgres:alpine3.18
+#    restart: always
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_DB: nord_db
+#      POSTGRES_HOST_AUTH_METHOD: trust
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - ./postgres_data:/var/lib/postgresql/data
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - 6333:6333
+    volumes:
+      - ./qdrant_data:/qdrant/storage
+#      - ./qdrant_config.yaml:/qdrant/config/config.yaml
+#      - ./run.sh:/qdrant/run.sh
+#    environment:
+#      - INITIAL_PEER=${INITIAL_PEER}
+#      - BOOTSTRAP_PEER=${BOOTSTRAP_PEER}
+#    entrypoint: /qdrant/run.sh

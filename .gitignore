@@ -162,3 +162,5 @@ cython_debug/
 .env
 .python-version
 song*
+qdrant_data
+postgres_data
