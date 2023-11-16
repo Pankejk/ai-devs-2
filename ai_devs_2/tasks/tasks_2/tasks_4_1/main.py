@@ -26,7 +26,7 @@ def main(task_name):
         raise
 
     response = requests.get(f"{BASE_URL}/task/{token}").json()
-    file_url = f"https{response["msg"].split("https")[1]}"
+    file_url = f"https{response['msg'].split('https')[1]}"
     data = requests.get(file_url).content
 
     file_name = "song.mp3"
@@ -37,7 +37,6 @@ def main(task_name):
 
     with open(output_name, "rb") as f:
         transcription = transcript_data(f)
-
 
     response = requests.post(
         f"{BASE_URL}/answer/{token}", json={"answer": transcription}
