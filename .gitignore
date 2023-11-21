@@ -164,3 +164,4 @@ cython_debug/
 song*
 qdrant_data
 postgres_data
+data.txt
