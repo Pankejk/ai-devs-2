@@ -135,10 +135,10 @@ def main(task_name):
     response = requests.post(response["database"]).json()
     print(response)
 
-    summary = make_summary(response)
+    # summary = make_summary(response)
 
-    with open("data.txt", "w") as f:
-        f.write(summary)
+    with open("data.txt", "r") as f:
+        summary = f.read()
 
     response = requests.post(
         f"{BASE_URL}/answer/{token}",
